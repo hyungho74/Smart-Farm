@@ -13,17 +13,18 @@ GPIO.output(A1A,GPIO.LOW)
 GPIO.output(A1B,GPIO.LOW)
 spi = spidev.SpiDev() #spi객체 생성
 spi.open(0,0) #spi 버스의 cs(chip select) 0신호선 사용
-def waterpump(hum_threshold):
-    def read_spi(adcChannel): #아날로그 값을 받는 함수
+def read_spi(adcChannel): #아날로그 값을 받는 함수
         adcvalue=0
         buff = spi.xfer2([1,(8+channel)<<4,0])
         adcvalue = ((buff[1]&3)<<8)+buff[2]
         return adcvalue
-    def map(value,min_adc,max_adc,min_hum,max_hum): #측정된 토양습도센서의 값을 100분율로 변환
-        adc_range = max_adc-min_adc
-        hum_range = max_hum - min_hum
-        scale_factor = float(adc_range)/float(hum_range)
-        return min_hum+((value-min_adc)/scale_factor)
+def map(value,min_adc,max_adc,min_hum,max_hum): #측정된 토양습도센서의 값을 100분율로 변환
+    adc_range = max_adc-min_adc
+    hum_range = max_hum - min_hum
+    scale_factor = float(adc_range)/float(hum_range)
+    return min_hum+((value-min_adc)/scale_factor)
+
+def waterpump(hum_threshold):
     try:
         adcChannel = 0
         while True:
