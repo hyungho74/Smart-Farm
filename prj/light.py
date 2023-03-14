@@ -1,7 +1,7 @@
 import spidev, time #sudo pip install spidev
 import RPi.GPIO as GPIO
 GPIO.setwarnings(False) #GPIO핀 초기화
-GPIO.setmodme(GPIO.BCM) 
+GPIO.setmode(GPIO.BCM) 
 pin = 18
 GPIO.setup(pin, GPIO.OUT)
 spi = spidev.SpiDev() #spi객체 생성
