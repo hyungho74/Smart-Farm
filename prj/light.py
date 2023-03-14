@@ -14,7 +14,7 @@ def analog_read(channel): #mcp3008에서 아날로그 센서값을 받는 코드
         adcout = ((r[1]&3)<<8)+r[2]
         return adcout
 
-def light():
+def lightsensor():
     while True:
         reading = analog_read(2) #채널 2번의 아날로그 값을 받아옴
         print("read : %d"%(128-reading)) #밝기가 낮으면 값이 올라가기 때문에 밝기가 낮을때 불이 켜지도록 하기 위해 조도센서에서 측정된 최댓값에서 reading을 빼줌(128은 나의 조도센서가 즉정했던 최댓값)
