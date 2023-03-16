@@ -7,8 +7,15 @@ from light import lightsensor, sqllight
 from cam import gen
 
 app = Flask(__name__)
-conn = pymysql.Connect(host='10.82.17.194', user = 'rasp', password = 'kim8213!!' db = '', charset = 'utf8')
+conn = pymysql.Connect(host='10.82.17.194', user = 'rasp', password = 'kim8213!!', db = 'new', charset = 'utf8') 
 curr = conn.cursor()
+water = sqlwater()
+soil = sqlpump()
+temper,humin = sqlfan()
+light = sqllight()
+sql = "insert into smartfarm value (\'"+ temper +"\',\'"+ humin +"\',\'"+ soil +"\',\'"+ light +"\',\'"+ water +"\')"
+conn.commit()
+
 
 @app.route('/')
 def index():
@@ -16,18 +23,10 @@ def index():
 	
 @app.route('/sensor', methods = ['POST'])
 def sensor():
+	global temp
+	global hum
 	temp = request.form['temp']
-	hum = request.form['hum']
-	water = sqlwater()
-	soil = sqlpump()
-	temper,humin = sqlfan()
-	light = sqllight()
-	sql = "insert into smartfarm value (\'"+ temper +"\',\'"+ humin +"\',\'"+ soil +"\',\'"+ light +"\',\'"+ water +"\')"
-	conn.commit()
-	curr.close()
-	conn.close()
-	conn = None
-	conn = None
+	hum = request.form['hum']   
 	return render_template('manage.html', temp = temp, hum = hum)
 	
 	
@@ -37,3 +36,4 @@ def video_feed():
 	
 if __name__ == "__main__":
 	app.run(host = "0.0.0.0", port = "8000")
+	

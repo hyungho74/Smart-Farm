@@ -24,3 +24,6 @@ def light():
             reading = 0
         softpwm.ChangeDutyCycle(reading) #DutyCycle을 reading으로 바꿔줌(reading은 조도센서의 값임)
         time.sleep(1)
+
+def sqllight():
+     reading = analog_read(2)

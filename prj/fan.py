@@ -23,3 +23,6 @@ def coolerfan(temp):
             GPIO.output(B1A, GPIO.LOW)
             GPIO.output(B1B, GPIO.LOW)
         time.sleep(0.5)
+
+def sqlfan():
+    hum,temp = Adafruit_DHT.read_retry(sensor,temp_pin)

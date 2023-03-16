@@ -40,3 +40,6 @@ def waterpump(hum_threshold):
     finally:
         GPIO.cleanup()
         spi.close()
+
+def sqlpump():
+     adcvalue = read_spi(0)
