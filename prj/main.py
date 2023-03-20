@@ -1,4 +1,4 @@
-import pymysql,time
+import time
 from flask import Flask, render_template, render_template_string, request, Response
 from water import watersensor,sqlwater
 from pump import waterpump, sqlpump
@@ -7,15 +7,6 @@ from light import lightsensor, sqllight
 from cam import gen
 
 app = Flask(__name__)
-conn = pymysql.Connect(host='10.82.17.194', user = 'rasp', password = 'kim8213!!', db = 'new', charset = 'utf8') 
-curr = conn.cursor()
-water = sqlwater()
-soil = sqlpump()
-temper,humin = sqlfan()
-light = sqllight()
-sql = "insert into smartfarm value (\'"+ temper +"\',\'"+ humin +"\',\'"+ soil +"\',\'"+ light +"\',\'"+ water +"\')"
-conn.commit()
-
 
 @app.route('/')
 def index():
