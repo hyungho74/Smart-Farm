@@ -4,6 +4,7 @@ import time
 # import thread module
 from _thread import *
 import threading
+import select
 
 print_lock = threading.Lock()
 # thread function
@@ -50,6 +51,16 @@ def thread2(c):
 	# connection closed
 	c.close()
 
+def thread3(c):
+	while True:
+		print_lock.acquire()
+		data = c.recv(1024)
+		c.send(data)
+		print_lock.release()
+		time.sleep(1)
+	# connection closed
+	c.close()
+
 def Main():
 	
 	host = "10.82.17.194"
@@ -76,8 +87,7 @@ def Main():
 		print('Connected to :', addr[0], ':', addr[1])
 
 		# Start a new thread and return its identifier
-		start_new_thread(thread1, (c,))
-		start_new_thread(thread2, (c,))
+		start_new_thread(thread3, (c,))
 	s.close()
 
 

@@ -1,6 +1,6 @@
 # Import socket module
 import socket
-
+import time
 
 def Main():
 	# local host IP '127.0.0.1'
@@ -16,20 +16,18 @@ def Main():
 
 	# message you send to server
 	message = "hello"
+	message1 = "hi"
+	s.send(message.encode('utf-8'))
 	while True:
-
-		# message sent to server
-		
-		ans = input('\nput message(n:end socket) :')
-		if ans == 'n':
-			break
+		data = s.recv(1024)
+		data = str(data.decode('utf-8'))
+		if data == 'hello':
+		    print('Received from the server :',data)
+		    s.send(message1.encode('utf-8'))
 		else:
-			s.send(ans.encode('utf-8'))
-			data = s.recv(1024)
-			print('Received from the server :',str(data.decode('utf-8')))
-			continue
-	# close the connection
-	s.close()
+		    print('Received from the server :',str(data.decode('utf-8')))
+		    s.send(message.encode('utf-8'))
+		time.sleep(1)
 
 if __name__ == '__main__':
 	Main()
