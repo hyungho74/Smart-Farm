@@ -1,28 +1,23 @@
-# Import socket module
-import socket
+import socketio
 import time
 
-def Main():
-	# local host IP '127.0.0.1'
-	host = '10.82.17.194'
+sio = socketio.Client()
+@sio.event
+def connect():
+    print("connect")
 
-	# Define the port on which you want to connect
-	port = 12345
+@sio.event
+def connect_error():
+    print("connect_error")
+    
+@sio.event
+def disconnect():
+    print("disconnect")
 
-	s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+sio.connect('http://localhost:8070')
+print("my sid is",sio.sid)
 
-	# connect to server on local computer
-	s.connect((host,port))
-
-	# message you send to server
-	message = "hello"
-	while True:
-		data = s.recv(1024)
-		print('Received from the server :',str(data.decode('utf-8')))
-		time.sleep(1.3)
-		s.send(message.encode('utf-8'))
-		# close the connection
-	s.close()
-
-if __name__ == '__main__':
-	Main()
+while(1):
+     sio.emit('msssage', {'foo' : 'bar'})
+     print("tlqkf")
+     time.sleep(1)
