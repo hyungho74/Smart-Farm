@@ -22,7 +22,7 @@ sio.connect('http://localhost:8070')
 # 채팅 입력 및 전송
 while True:
     message = input('메시지를 입력하세요 (나가기: q): ')
-    if message == 'q':
+    if message == 'w':
         break
     sio.emit('chat_message', message)
 
