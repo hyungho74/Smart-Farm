@@ -1,36 +1,33 @@
 const express = require('express');
 const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+const path = require('path');
 
-const port = 8070;
-const server = app.listen(port, function() {
-    console.log('Listening on '+port);
+// 정적 파일 디렉토리 설정
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname + '/../../sockets/web/index.html'));
 });
 
-const SocketIO = require('socket.io');
-const io = SocketIO(server, {path: '/socket.io'});
+// 클라이언트 연결 이벤트 처리
+io.on('connection', (socket) => {
+  console.log('새로운 클라이언트가 연결되었습니다.');
 
-io.on('connection', function (socket) {
-    console.log(socket.id, ' connected...');
-    
-    // broadcasting a entering message to everyone who is in the chatroom
-    io.emit('msg', `${socket.id} has entered the chatroom.`);
-    io.on('msg', function (data){
-        console.log(socket.id, ':', data);
-        socket.broadcast.emit('msg', `${socket.id}: ${data}`);
-    });
-  	// message receives
-    socket.on('msg', function (data) {
-        console.log(socket.id,': ', data);
-        // broadcasting a message to everyone except for the sender
-        socket.broadcast.emit('msg', `${socket.id}: ${data}`);
-    });
+  // 센서 데이터 수신 이벤트 처리
+  socket.on('sensor_data', (data) => {
+    console.log('새로운 센서 데이터:', data);
+    // 클라이언트에게 센서 데이터 전송
+    io.emit('update_sensor_data', data);
+  });
 
-    // user connection lost
-    socket.on('disconnect', function (data) {
-        io.emit('msg', `${socket.id} has left the chatroom.`);
-    });
+  // 클라이언트 연결 해제 이벤트 처리
+  socket.on('disconnect', () => {
+    console.log('클라이언트가 연결을 해제했습니다.');
+  });
 });
 
-app.get('/chat', function(req, res) {
-    res.sendFile(__dirname + '/chat.html');
+// 서버 시작
+const port = 3000;
+http.listen(port, () => {
+  console.log(`서버가 포트 ${port}에서 실행 중입니다.`);
 });
