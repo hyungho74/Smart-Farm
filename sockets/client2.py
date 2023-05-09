@@ -32,7 +32,7 @@ def read_sensor_values():
     water_level = 90
 
     # 토양 습도 센서 읽기
-    soil_moisture = 60
+    soil_moisture = 70
 
     # 센서 데이터 반환
     sensor_data = {
