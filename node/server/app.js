@@ -11,7 +11,7 @@ app.get('/', function(req, res) {
 
 // 클라이언트 연결 이벤트 처리
 io.on('connection', (socket) => {
-  console.log('새로운 클라이언트가 연결되었습니다.');
+  console.log('new client connected.');
 
   // 센서 데이터 수신 이벤트 처리
   socket.on('sensor_data', (data) => {
@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
 
   // 클라이언트 연결 해제 이벤트 처리
   socket.on('disconnect', () => {
-    console.log('클라이언트가 연결을 해제했습니다.');
+    console.log('disconnect');
   });
 });
 
