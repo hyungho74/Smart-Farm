@@ -3,7 +3,7 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const path = require('path');
-
+const hostname = '10.82.17.194';
 // 정적 파일 디렉토리 설정
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname + '/../../sockets/web/index.html'));
@@ -28,6 +28,6 @@ io.on('connection', (socket) => {
 
 // 서버 시작
 const port = 3000;
-http.listen(port, () => {
-  console.log(`서버가 포트 ${port}에서 실행 중입니다.`);
+http.listen(port, hostname, () => {
+  console.log(`서버가 ${hostname} ${port}에서 실행 중입니다.`);
 });
