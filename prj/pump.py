@@ -1,5 +1,7 @@
 import RPi.GPIO as GPIO
 import time
+import RPi.GPIO as GPIO
+import time
 import spidev
 A1A = 5 #모터 드라이브(l9110s)의 A1-A의 핀
 A1B = 6 #모터 드라이브(l9110s)의 A1-B의 핀
@@ -13,7 +15,7 @@ GPIO.output(A1A,GPIO.LOW)
 GPIO.output(A1B,GPIO.LOW)
 spi = spidev.SpiDev() #spi객체 생성
 spi.open(0,0) #spi 버스의 cs(chip select) 0신호선 사용
-def read_spi(adcChannel): #아날로그 값을 받는 함수
+def read_spi(channel): #아날로그 값을 받는 함수
         adcvalue=0
         buff = spi.xfer2([1,(8+channel)<<4,0])
         adcvalue = ((buff[1]&3)<<8)+buff[2]
@@ -24,22 +26,17 @@ def map(value,min_adc,max_adc,min_hum,max_hum): #측정된 토양습도센서의
     scale_factor = float(adc_range)/float(hum_range)
     return min_hum+((value-min_adc)/scale_factor)
 
+def sand():
+    adcvalue=read_spi(0)
+    hum = 100-int(map(adcvalue,hum_max,1023,0,100))
+    return hum
+    
 def waterpump(hum_threshold):
-    try:
-        adcChannel = 0
-        while True:
-            adcvalue=read_spi(adcChannel)
-            hum = 100-int(map(adcvalue,hum_max,1023,0,100))
-            if hum < hum_threshold: #기준값보다 적다면 모터 작동
-                GPIO.output(A1A,GPIO.HIGH)
-                GPIO.output(A1B,GPIO.LOW)
-            else:
-                GPIO.output(A1A,GPIO.LOW)
-                GPIO.output(A1B,GPIO.LOW)
-            time.sleep(0.5)
-    finally:
-        GPIO.cleanup()
-        spi.close()
-
-def sqlpump():
-     adcvalue = read_spi(0)
+    hum = sand()
+    if hum < hum_threshold: #기준값보다 적다면 모터 작동
+        GPIO.output(A1A,GPIO.HIGH)
+        GPIO.output(A1B,GPIO.LOW)
+    else:
+        GPIO.output(A1A,GPIO.LOW)
+        GPIO.output(A1B,GPIO.LOW)
+    time.sleep(0.5)
