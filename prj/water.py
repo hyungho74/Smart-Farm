@@ -9,12 +9,6 @@ def analog_read(channel): #mcp3008에서 아날로그 센서값을 받는 코드
     adc_out = ((r[1]&3) << 8) + r[2]
     return adc_out
 
-def water():
-    while True:
-        reading = analog_read(1) #채널 0번의 아날로그 센서값을 받아옴
-        voltage = reading * 3.3 / 1024
-        print("Reading=%d\tVoltage=%f" % (reading, voltage))
-        time.sleep(1)
-
-def sqlwater():
-    reading = analog_read(1)
+def watersensor():
+    reading = analog_read(1) #채널 1번의 아날로그 센서값을 받아옴
+    return reading
