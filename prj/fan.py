@@ -13,16 +13,16 @@ GPIO.setup(B1A,GPIO.OUT)
 GPIO.setup(B1B,GPIO.OUT)
 GPIO.output(B1A,GPIO.LOW)
 GPIO.output(B1B,GPIO.LOW)
-def coolerfan(temp):
-    while True:
-        huminity, temperature = Adafruit_DHT.read_retry(sensor, temp_pin) #온습도센서에서 값을 받아옴
-        if temperature > temp: #센서에서 받아온 온도가 쿨링 팬을 작동시킬 기준온도보다 높다면
-            GPIO.output(B1A, GPIO.HIGH) #B1-A핀을 활성화 시킨다(B1-A는 정방향 회전)
-            GPIO.output(B1B, GPIO.LOW) #B1-B는 역방향회전이기때문에 활성화 시키지 않는다
-        else:
-            GPIO.output(B1A, GPIO.LOW)
-            GPIO.output(B1B, GPIO.LOW)
-        time.sleep(0.5)
-
-def sqlfan():
-    hum,temp = Adafruit_DHT.read_retry(sensor,temp_pin)
+def dht():
+    huminity, temperature = Adafruit_DHT.read_retry(sensor, temp_pin) #온습도센서에서 값을 받아옴
+    return temperature, huminity
+        
+def fan(temp):
+    temperature, huminity = dht()
+    if temperature > temp: #센서에서 받아온 온도가 쿨링 팬을 작동시킬 기준온도보다 높다면
+        GPIO.output(B1A, GPIO.HIGH) #B1-A핀을 활성화 시킨다(B1-A는 정방향 회전)
+        GPIO.output(B1B, GPIO.LOW) #B1-B는 역방향회전이기때문에 활성화 시키지 않는다
+    else:
+        GPIO.output(B1A, GPIO.LOW)
+        GPIO.output(B1B, GPIO.LOW)
+    
